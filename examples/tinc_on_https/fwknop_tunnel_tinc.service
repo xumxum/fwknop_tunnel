@@ -1,0 +1,15 @@
+# Fwknop tunnel
+# Put it to /etc/systemd/system/
+
+[Unit]
+After=network-online.target
+Before=tinc.service
+Description=Fwknop tunnel tinc
+
+[Service]
+# Redirect tinc to connect to localhost(127.0.0.1) port 6655 instead of www.example.com port 655 and it will go through fwknop_tunnel
+ExecStart=/usr/local/bin/fwknop_tunnel -local-port 6655 -remote-host www.example.com -remote-port 655 -verbose -cmd "/usr/local/bin/fwknop_openport.sh"
+Restart=always
+
+[Install]
+WantedBy=default.target
