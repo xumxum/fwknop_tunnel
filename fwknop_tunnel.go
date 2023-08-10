@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"fwknop_tunnel/version"
 	"io"
 	"log"
 	"net"
@@ -14,8 +15,8 @@ import (
 
 type OperationMode int
 
-const version = "1.0.0"
-const buildDateTime = "2023/08/08"
+//const version = "1.0.0"
+//const buildDateTime = "2023/08/08"
 
 const (
 	SingleTunnel OperationMode = iota
@@ -41,6 +42,7 @@ var remotePort = flag.Int("remote-port", 0, "remote port")
 var remoteHost = flag.String("remote-host", "", "remote host")
 var delay = flag.Int("delay", 1000, "Time to wait in ms after running the cmd, before it tries to connect")
 var verbose = flag.Bool("verbose", false, "verbose logs")
+var versionFlag = flag.Bool("version", false, "print version")
 var fwknopCmd = flag.String("cmd", "", "The fwknop command to execute before connecting to remote")
 var mode = flag.String("mode", "multi", "Tunnel operation mode (values: single, multi)")
 
@@ -49,7 +51,7 @@ func main() {
 	log.SetFlags(log.Lmicroseconds)
 
 	//log.Printf("Version: %s, Built: %s", version, buildDateTime)
-	log.Printf("Version: %s, Built: %s", version, buildDateTime)
+	log.Printf("Version: %s", version.BuildVersion())
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [options...]\n", os.Args[0])
@@ -60,6 +62,10 @@ func main() {
 	}
 
 	flag.Parse()
+
+	if *versionFlag {
+		os.Exit(0)
+	}
 
 	switch {
 	case *mode == "single":
